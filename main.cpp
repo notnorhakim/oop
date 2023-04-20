@@ -31,7 +31,7 @@ int main()
         std::cout << std::endl;
         std::cout << "You chose: " << userOption << std::endl;
 
-        if (userOption == 0) //bad choice
+        if (userOption == 0) //not one of the choice
         {
             std::cout << "Invalid choice. Choose 1-6" << std::endl;
         }

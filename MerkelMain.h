@@ -4,7 +4,9 @@
 #include "OrderBookEntry.h"
 #include "OrderBook.h"
 #include "Wallet.h"
+#include "Candlestick.h"
 
+class Candlestick;
 
 class MerkelMain
 {
@@ -13,7 +15,7 @@ class MerkelMain
         /** Call this to start the sim */
         void init();
     private: 
-        void printCandlestick(std::string product, std::string time);
+        // void printCandlestick(std::string product, std::string time);
         void printMenu();
         void printHelp();
         void printMarketStats();
@@ -33,7 +35,7 @@ class MerkelMain
         std::vector<Candlestick> candlesticks;
 
 
-        OrderBook orderBook{"20200317.csv"};
+        OrderBook orderBook{"20200601.csv"};
 
         Wallet wallet;
 

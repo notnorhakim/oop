@@ -39,6 +39,8 @@ std::vector<OrderBookEntry> OrderBook::getOrders(OrderBookType type,
     std::vector<OrderBookEntry> orders_sub;
     for (OrderBookEntry& e : orders)
     {
+        //change orders timestamp to only hour
+        e.timestamp = e.timestamp.substr(0,13);
         if (e.orderType == type && 
             e.product == product && 
             e.timestamp == timestamp )
@@ -78,17 +80,23 @@ std::string OrderBook::getEarliestTime()
 
 std::vector<std::string>   OrderBook::getAllTimes()
 {
-    std::vector<std::string> times;
+    std::vector<std::string> hour;
+    std::vector<std::string> hour_minute;
     for (OrderBookEntry& e : orders)
     {
-        //if statement to check if the timestamp is already in the vector
-        //if it is not, then add it to the vector
-        if (std::find(times.begin(), times.end(), e.timestamp) == times.end())
+        //if statement to check if the timestamp of only the hour is already in the vector
+        if (std::find(hour.begin(), hour.end(), e.timestamp.substr(0,13)) == hour.end())
         {
-            times.push_back(e.timestamp);
+            hour.push_back(e.timestamp.substr(0,13));
         }
+        //if statement to check of the timestamp of the hour and minute is already in the vector
+        if (std::find(hour_minute.begin(), hour_minute.end(), e.timestamp.substr(0,16)) == hour_minute.end())
+        {
+            hour_minute.push_back(e.timestamp.substr(0,16));
+        }
+
     }
-    return times;
+    return hour;
 }
 
 std::string OrderBook::getNextTime(std::string timestamp)

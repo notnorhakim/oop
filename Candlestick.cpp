@@ -4,16 +4,12 @@
 
 
 
-Candlestick::Candlestick(double _high, double _low, double _open, double _close, std::string _time):
-high(_high), 
-low(_low), 
-open(_open), 
-close(_close),
-time(_time)
+Candlestick::Candlestick(double _high, double _low, double _mean, double _prevMean, std::string _time)
+    : high(_high), low(_low), mean(_mean), prevMean(_prevMean), time(_time)
 {
-
-
+ 
 }
+
 
 void Candlestick::drawCandlestick(std::vector<Candlestick> candlesticks)
 {
@@ -22,23 +18,37 @@ void Candlestick::drawCandlestick(std::vector<Candlestick> candlesticks)
     {
         double high = candlestick.high;
         double low = candlestick.low;
-        double open = candlestick.open;
-        double close = candlestick.close;
+        double open = candlestick.prevMean;
+        double close = candlestick.mean;
         double diff_h_c = high - close;
         double diff_c_o = close - open;
         double diff_o_l = open - low;
+        
    
-    for (int i = 0; i < diff_h_c; i++) {
-        std::cout << "  |  " << std::endl;
+        for (int i = 0; i < diff_h_c; i++) {
+            std::cout << "  |  " << std::endl;
+        }
+
+        for (int i = 0; i < diff_c_o; i++) {
+            std::cout << "-----" << std::endl;
+        }
+
+        for (int i = 0; i < diff_o_l; i++) {
+            std::cout << "  |  " << std::endl;
+        }
+
+        std::cout << high << std::endl;
+        std::cout << low << std::endl;
+        std::cout << open << std::endl;
+        std::cout << close << std::endl;
+        std::cout << diff_h_c << std::endl;
+        std::cout << diff_c_o << std::endl;
+        std::cout << diff_o_l << std::endl;
+        
+
+        std::cout << " ............................................................................... " << std::endl;
     }
 
-    for (int i = 0; i < diff_c_o; i++) {
-        std::cout << "-----" << std::endl;
-    }
 
-    for (int i = 0; i < diff_o_l; i++) {
-        std::cout << "  |  " << std::endl;
-    }
-    }
     
 }

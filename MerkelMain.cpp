@@ -56,10 +56,10 @@ void MerkelMain::printMenu()
     // std::cout << "Current time is: " << currentTime << std::endl;
 }
 
-void MerkelMain::printCandlestick(std::string product, std::string time)
-{
+// void MerkelMain::printCandlestick(std::string product, std::string time)
+// {
 
-}
+// }
 
 
 
@@ -76,19 +76,20 @@ void MerkelMain::printMarketStats()
 
     for (int i = 0; i < allTime.size(); i++)
     {
-        std::cout << "=========================== Time Stamp: " << allTime[i] << " ===========================" << std::endl;
+        std::cout << "=========================== Time Stamp: " << allTime[i] << ":00:00 ===========================" << std::endl;
 
         for (std::string const& p : orderBook.getKnownProducts())
         {
             std::vector<OrderBookEntry> entries_ask = orderBook.getOrders(OrderBookType::ask, p, allTime[i]);
             std::vector<OrderBookEntry> entries_bid = orderBook.getOrders(OrderBookType::ask, p, allTime[i]);
 
-            std::cout << "Product: " << p << std::endl;
-            std::cout << "Asks seen: " << entries_ask.size() << std::endl;
-            std::cout << "Bids seen: " << entries_bid.size() << std::endl;
-            std::cout << std::endl;
-            // std::cout << "Max ask: " << OrderBook::getHighPrice(entries) << std::endl;
-            // std::cout << "Min ask: " << OrderBook::getLowPrice(entries) << std::endl;
+            std::cout << "Product:      " << p << '\n';
+            std::cout << "Asks seen:    " << entries_ask.size() << '\n';
+            std::cout << "Bids seen:    " << entries_bid.size() << '\n';
+            std::cout << "Max ask:      " << OrderBook::getHighPrice(entries_ask) << '\n';
+            std::cout << "Min ask:      " << OrderBook::getLowPrice(entries_bid) << '\n';
+            std::cout << '\n';
+
         }
     }
 
@@ -204,82 +205,82 @@ void MerkelMain::gotoNextTimeframe()
 
 std::vector<Candlestick> MerkelMain::generateCandlesticks()
 {
-        std::cout << "Which product would you like to see? e.g ETH/BTC" << std::endl;
-        std::string inputProduct;
-        std::getline(std::cin, inputProduct);
-        std::cout << "What order type? e.g ask" << std::endl;
-        std::string inputOrderType;
-        OrderBookType inputType;
-        std::getline(std::cin, inputOrderType);
-        if (inputOrderType != "ask" && inputOrderType != "bid")
+    std::cout << "Which product would you like to see? e.g ETH/BTC" << std::endl;
+    std::string inputProduct;
+    std::getline(std::cin, inputProduct);
+    std::cout << "What order type? e.g ask" << std::endl;
+    std::string inputOrderType;
+    OrderBookType inputType;
+    std::getline(std::cin, inputOrderType);
+    if (inputOrderType != "ask" && inputOrderType != "bid")
+    {
+        std::cout << "Invalid order type. Choose ask or bid" << std::endl;
+    }
+    else if (inputOrderType == "ask")
+    {
+        inputType = OrderBookType::ask;
+    }
+    else if (inputOrderType == "bid")
+    {
+        inputType = OrderBookType::bid;
+    }
+
+    allTime = orderBook.getAllTimes();
+
+    double totalValue = 0;
+    double totalPrice = 0;
+    double high = 0;
+    double low;
+    double prevMean = 0;
+
+    for (int i = 0; i < allTime.size(); i++)
+    {
+        std::vector<OrderBookEntry> ordersCandlestick = orderBook.getOrders(inputType, inputProduct, allTime[i]);
+        std::cout << "=========================== CandleStick #" << i + 1 <<  " [ " << allTime[i] << ":00:00 ] ===========================" << std::endl;
+
+        
+        for (int i = 0; i < ordersCandlestick.size(); i++)
         {
-            std::cout << "Invalid order type. Choose ask or bid" << std::endl;
-            return;
-        }
-        else if (inputOrderType == "ask")
-        {
-            inputType = OrderBookType::ask;
-        }
-        else if (inputOrderType == "bid")
-        {
-            inputType = OrderBookType::bid;
-        }
-
-        allTime = orderBook.getAllTimes();
-
-
-        double totalValue = 0;
-        double totalPrice = 0;
-        double high = 0;
-        double low;
-        double prevMean =0;
-
-        for (int i = 0; i < allTime.size(); i++)
-        {
-            std::vector<OrderBookEntry> ordersCandlestick = orderBook.getOrders(inputType, inputProduct, allTime[i]);
-            std::cout << "=========================== CandleStick #" << i + 1 <<  " [ " << allTime[i] << " ] ===========================" << std::endl;
-
-             for (int i = 0; i < ordersCandlestick.size(); i++)
-                {
-                    
-                    std::string date = ordersCandlestick[i].timestamp;
-                    double price = ordersCandlestick[i].price;
-                    double amount = ordersCandlestick[i].amount;
-                    double value = price * amount;
-                    low = ordersCandlestick[0].price;
-
-                    if (price > high)
-                    {
-                        high = price;
-                    }
-                    if (price < low)
-                    {
-                        low = price;
-                    }
-                    totalValue += value;
-                    totalPrice += price;
-                                
-                }
-
-            double mean = totalValue / totalPrice;
-
-            Candlestick candle = Candlestick(high, low, mean, allTime[i]);
-
-            candlesticks.push_back(Candlestick(high, low, mean, allTime[i]));
-
-            std::cout << "Order Type: " << inputOrderType << std::endl;
-            std::cout << "Product: " << inputProduct << std::endl;
-
-            std::cout << "OPEN: " << prevMean << std::endl;
-            std::cout << "CLOSE: " << mean << std::endl;
-            std::cout << "HIGH: " << high << std::endl;
-            std::cout << "LOW: " << low << std::endl;
-            std::cout << std::endl;
-            prevMean = mean;
-
-            return candlesticks;
             
+            std::string date = ordersCandlestick[i].timestamp;
+            double price = ordersCandlestick[i].price;
+            double amount = ordersCandlestick[i].amount;
+            double value = price * amount;
+            low = ordersCandlestick[0].price;
+
+            if (price > high)
+            {
+                high = price;
+            }
+            if (price < low)
+            {
+                low = price;
+            }
+            totalValue += value;
+            totalPrice += price;
+                        
         }
+
+        double mean = totalValue / totalPrice;
+
+        
+        std::cout << "                                    Total of " << ordersCandlestick.size() << " orders                                  " << std::endl;
+        std::cout << "Order Type:    " << inputOrderType << std::endl;
+        std::cout << "Product:       " << inputProduct << std::endl;
+
+        std::cout << "OPEN:          " << prevMean << std::endl;
+        std::cout << "CLOSE:         " << mean << std::endl;
+        std::cout << "HIGH:          " << high << std::endl;
+        std::cout << "LOW:           " << low << std::endl;
+        std::cout << std::endl;
+        prevMean = mean;
+
+        Candlestick candle = Candlestick(high, low, mean, prevMean, allTime[i]);
+
+        candlesticks.push_back(Candlestick(high, low, mean, prevMean, allTime[i]));
+
+    }
+    return candlesticks;
 }
  
 int MerkelMain::getUserOption()
@@ -310,7 +311,8 @@ void MerkelMain::processUserOption(int userOption)
     {
         // printHelp();
         generateCandlesticks();
-        
+        // Candlestick::drawCandlestick(candlesticks);
+
     }
     if (userOption == 2) 
     {
@@ -351,7 +353,8 @@ void MerkelMain::processUserOption(int userOption)
         // std::cout << "_____________________________________________________" << std::endl;
 
         
-        // candlestick.drawCandlestick(candlesticks);
+        //draw candlestick
+        Candlestick::drawCandlestick(candlesticks);      
 
     }         
 }

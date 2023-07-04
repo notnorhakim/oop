@@ -201,34 +201,9 @@ void MerkelMain::gotoNextTimeframe()
 
     
 }
- 
-int MerkelMain::getUserOption()
-{
-    int userOption = 0;
-    std::string line;
-    std::cout << "Type in 1-6" << std::endl;
-    std::getline(std::cin, line);
-    try{
-        userOption = std::stoi(line);
-    }catch(const std::exception& e)
-    {
-        // 
-    }
-    std::cout << "You chose: " << userOption << std::endl;
-    return userOption;
-}
 
-void MerkelMain::processUserOption(int userOption)
+std::vector<Candlestick> MerkelMain::generateCandlesticks()
 {
-
-    
-    if (userOption == 0) // bad input
-    {
-        std::cout << "Invalid choice. Choose 1-6" << std::endl;
-    }
-    if (userOption == 1) 
-    {
-        // printHelp();
         std::cout << "Which product would you like to see? e.g ETH/BTC" << std::endl;
         std::string inputProduct;
         std::getline(std::cin, inputProduct);
@@ -258,13 +233,11 @@ void MerkelMain::processUserOption(int userOption)
         double high = 0;
         double low;
         double prevMean =0;
-        std::vector<Candlestick> candlestick;
-
 
         for (int i = 0; i < allTime.size(); i++)
         {
             std::vector<OrderBookEntry> ordersCandlestick = orderBook.getOrders(inputType, inputProduct, allTime[i]);
-            std::cout << "=========================== CandleStick #" << i <<  " [ " << allTime[i] << " ] ===========================" << std::endl;
+            std::cout << "=========================== CandleStick #" << i + 1 <<  " [ " << allTime[i] << " ] ===========================" << std::endl;
 
              for (int i = 0; i < ordersCandlestick.size(); i++)
                 {
@@ -290,7 +263,9 @@ void MerkelMain::processUserOption(int userOption)
 
             double mean = totalValue / totalPrice;
 
-            Candlestick candlestick(high, low, prevMean, mean, allTime[i]); 
+            Candlestick candle = Candlestick(high, low, mean, allTime[i]);
+
+            candlesticks.push_back(Candlestick(high, low, mean, allTime[i]));
 
             std::cout << "Order Type: " << inputOrderType << std::endl;
             std::cout << "Product: " << inputProduct << std::endl;
@@ -301,9 +276,41 @@ void MerkelMain::processUserOption(int userOption)
             std::cout << "LOW: " << low << std::endl;
             std::cout << std::endl;
             prevMean = mean;
+
+            return candlesticks;
             
         }
+}
+ 
+int MerkelMain::getUserOption()
+{
+    int userOption = 0;
+    std::string line;
+    std::cout << "Type in 1-6" << std::endl;
+    std::getline(std::cin, line);
+    try{
+        userOption = std::stoi(line);
+    }catch(const std::exception& e)
+    {
+        // 
+    }
+    std::cout << "You chose: " << userOption << std::endl;
+    return userOption;
+}
 
+void MerkelMain::processUserOption(int userOption)
+{
+
+    
+    if (userOption == 0) // bad input
+    {
+        std::cout << "Invalid choice. Choose 1-6" << std::endl;
+    }
+    if (userOption == 1) 
+    {
+        // printHelp();
+        generateCandlesticks();
+        
     }
     if (userOption == 2) 
     {
@@ -327,7 +334,7 @@ void MerkelMain::processUserOption(int userOption)
     }
     if (userOption == 7) 
     {
-        //text-based plot of candlestick data
+        // text-based plot of candlestick data
         // std::cout << "_____________________________________________________" << std::endl;
         // std::cout << "  |  " << "          " << "  |  " << std::endl;
         // std::cout << "  |  " << "          " << "  |  " << std::endl;
@@ -343,7 +350,9 @@ void MerkelMain::processUserOption(int userOption)
         // std::cout << "  |  " << "          " << "  |  " << std::endl;
         // std::cout << "_____________________________________________________" << std::endl;
 
-         Candlestick candlestick();
+        
+        // candlestick.drawCandlestick(candlesticks);
+
     }         
 }
 

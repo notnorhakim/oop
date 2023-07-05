@@ -4,8 +4,8 @@
 
 
 
-Candlestick::Candlestick(double _high, double _low, double _mean, double _prevMean, std::string _time)
-    : high(_high), low(_low), mean(_mean), prevMean(_prevMean), time(_time)
+Candlestick::Candlestick(double _high, double _low, double _close, double _open, std::string _time)
+    : high(_high), low(_low), close(_close), open(_open), time(_time)
 {
  
 }
@@ -18,8 +18,8 @@ void Candlestick::drawCandlestick(std::vector<Candlestick> candlesticks)
     {
         double high = candlestick.high;
         double low = candlestick.low;
-        double open = candlestick.prevMean;
-        double close = candlestick.mean;
+        double open = candlestick.open;
+        double close = candlestick.close;
         double diff_h_c = high - close;
         double diff_c_o = close - open;
         double diff_o_l = open - low;

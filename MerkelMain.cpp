@@ -228,10 +228,10 @@ std::vector<Candlestick> MerkelMain::generateCandlesticks()
     allTime = orderBook.getAllTimes();
 
     double totalValue = 0;
-    double totalPrice = 0;
+    double totalAmount = 0;
     double high = 0;
     double low;
-    double prevMean = 0;
+    double open = 0;
 
     for (int i = 0; i < allTime.size(); i++)
     {
@@ -257,30 +257,43 @@ std::vector<Candlestick> MerkelMain::generateCandlesticks()
                 low = price;
             }
             totalValue += value;
-            totalPrice += price;
+            totalAmount += amount;
                         
         }
 
-        double mean = totalValue / totalPrice;
+        double close = totalValue / totalAmount;
 
         
         std::cout << "                                    Total of " << ordersCandlestick.size() << " orders                                  " << std::endl;
         std::cout << "Order Type:    " << inputOrderType << std::endl;
         std::cout << "Product:       " << inputProduct << std::endl;
 
-        std::cout << "OPEN:          " << prevMean << std::endl;
-        std::cout << "CLOSE:         " << mean << std::endl;
+        std::cout << "OPEN:          " << open << std::endl;
+        std::cout << "CLOSE:         " << close << std::endl;
         std::cout << "HIGH:          " << high << std::endl;
         std::cout << "LOW:           " << low << std::endl;
         std::cout << std::endl;
-        prevMean = mean;
 
-        Candlestick candle = Candlestick(high, low, mean, prevMean, allTime[i]);
+        Candlestick candle = Candlestick(high, low, close, open, allTime[i]);
 
-        candlesticks.push_back(Candlestick(high, low, mean, prevMean, allTime[i]));
+        candlesticks.push_back(Candlestick(high, low, close, open, allTime[i]));
+        open = close;
+
+        
 
     }
+
+    std::cout << "========================================== [ SUMMARY ] ==========================================" << std::endl;
+    std::cout << "Date                         Open          Close          High          Low" << std::endl;
+    std::cout << candlesticks[0].time << ":00:00          " << candlesticks[0].open << "          " << candlesticks[0].close << "          " << candlesticks[0].high << "          " << candlesticks[0].low << std::endl;
+    std::cout << candlesticks[1].time << ":00:00          " << candlesticks[1].open << "          " << candlesticks[1].close << "          " << candlesticks[1].high << "          " << candlesticks[1].low << std::endl;
+    std::cout << candlesticks[2].time << ":00:00          " << candlesticks[2].open << "          " << candlesticks[2].close << "          " << candlesticks[2].high << "          " << candlesticks[2].low << std::endl;
+    std::cout << candlesticks[3].time << ":00:00          " << candlesticks[3].open << "          " << candlesticks[3].close << "          " << candlesticks[3].high << "          " << candlesticks[3].low << std::endl;
+    std::cout << std::endl;
+
     return candlesticks;
+
+
 }
  
 int MerkelMain::getUserOption()

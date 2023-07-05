@@ -8,7 +8,7 @@
 class Candlestick
 {
     public:
-        Candlestick(double _high, double _low, double _mean, double _prevMean, std::string _time);
+        Candlestick(double _high, double _low, double close, double _open, std::string _time);
 
         //draw candlestick
         static void drawCandlestick(std::vector<Candlestick> candlesticks);
@@ -16,9 +16,9 @@ class Candlestick
     
         double high;
         double low;
-        double mean;
+        double close;
         std::string time;
-        double prevMean;
+        double open;
 
 };
 

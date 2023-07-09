@@ -78,7 +78,7 @@ std::string OrderBook::getEarliestTime()
     return orders[0].timestamp;
 }
 
-std::vector<std::string>   OrderBook::getAllTimes()
+std::vector<std::string> OrderBook::getAllTimes()
 {
     std::vector<std::string> hour;
     std::vector<std::string> hour_minute;
@@ -89,12 +89,7 @@ std::vector<std::string>   OrderBook::getAllTimes()
         {
             hour.push_back(e.timestamp.substr(0,13));
         }
-        //if statement to check of the timestamp of the hour and minute is already in the vector
-        if (std::find(hour_minute.begin(), hour_minute.end(), e.timestamp.substr(0,16)) == hour_minute.end())
-        {
-            hour_minute.push_back(e.timestamp.substr(0,16));
-        }
-
+        
     }
     return hour;
 }

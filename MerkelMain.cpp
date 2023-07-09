@@ -5,6 +5,8 @@
 #include "CSVReader.h"
 #include "Candlestick.h"
 #include "OrderBook.h"
+#include <cmath>
+#include <iomanip>
 
 MerkelMain::MerkelMain()
 {
@@ -29,39 +31,25 @@ void MerkelMain::init()
 
 void MerkelMain::printMenu()
 {
-    // // 1 print help
-    // std::cout << "1: Print help " << std::endl;
-    
-    // // 3 make an offer
-    // std::cout << "3: Make an offer " << std::endl;
-    // // 4 make a bid 
-    // std::cout << "4: Make a bid " << std::endl;
-    // // 5 print wallet
-    // std::cout << "5: Print wallet " << std::endl;
-
-
-
 
     // 1 print Candlestick
-    std::cout << "1: Print CandleStick " << std::endl;
+    std::cout << "1: Compute CandleStick " << std::endl;
     // 2 print exchange stats
-    std::cout << "2: Print exchange stats" << std::endl;
+    // std::cout << "2: Print exchange stats" << std::endl;
     // 6 continue   
-    std::cout << "6: Continue " << std::endl;
+    std::cout << "6: Change Candlestick " << std::endl;
     // 7 Sample Candlestick
-    std::cout << "7: Sample Candlestick " << std::endl;
+    std::cout << "7: Generate Candlestick " << std::endl;
 
     std::cout << "============== " << std::endl;
 
-    // std::cout << "Current time is: " << currentTime << std::endl;
 }
 
-// void MerkelMain::printCandlestick(std::string product, std::string time)
-// {
-
-// }
-
-
+void MerkelMain::printMenu2()
+{
+    // 6 continue
+    std::cout << "6: Continue " << std::endl;
+}
 
 void MerkelMain::printHelp()
 {
@@ -179,26 +167,10 @@ void MerkelMain::printWallet()
         
 void MerkelMain::gotoNextTimeframe()
 {
-    std::cout << "Going to next time frame. " << std::endl;
-    currentTime = orderBook.getNextTime(currentTime);
-    std::cout << "=========================== Current Time Frame [ " << currentTime << " ] ===========================" << std::endl;
-
-    // for (std::string p : orderBook.getKnownProducts())
-    // {
-    //     std::cout << "matching " << p << std::endl;
-    //     std::vector<OrderBookEntry> sales =  orderBook.matchAsksToBids(p, currentTime);
-    //     std::cout << "Sales: " << sales.size() << std::endl;
-    //     for (OrderBookEntry& sale : sales)
-    //     {
-    //         std::cout << "Sale price: " << sale.price << " amount " << sale.amount << std::endl; 
-    //         if (sale.username == "simuser")
-    //         {
-    //             // update the wallet
-    //             wallet.processSale(sale);
-    //         }
-    //     }
-        
-    // }
+    std::cout << "Changing new Candlestick...... " << std::endl;
+    // remove all contents of candlesticks vector
+    candlesticks.clear();
+    candlesticks.clear();
 
     
 }
@@ -231,7 +203,8 @@ std::vector<Candlestick> MerkelMain::generateCandlesticks()
     double totalAmount = 0;
     double high = 0;
     double low;
-    double open = 0;
+    double open =0;
+    
 
     for (int i = 0; i < allTime.size(); i++)
     {
@@ -239,14 +212,16 @@ std::vector<Candlestick> MerkelMain::generateCandlesticks()
         std::cout << "=========================== CandleStick #" << i + 1 <<  " [ " << allTime[i] << ":00:00 ] ===========================" << std::endl;
 
         
+
         for (int i = 0; i < ordersCandlestick.size(); i++)
         {
             
-            std::string date = ordersCandlestick[i].timestamp;
+            // std::string date = ordersCandlestick[i].timestamp;
             double price = ordersCandlestick[i].price;
             double amount = ordersCandlestick[i].amount;
             double value = price * amount;
             low = ordersCandlestick[0].price;
+
 
             if (price > high)
             {
@@ -267,7 +242,7 @@ std::vector<Candlestick> MerkelMain::generateCandlesticks()
         std::cout << "                                    Total of " << ordersCandlestick.size() << " orders                                  " << std::endl;
         std::cout << "Order Type:    " << inputOrderType << std::endl;
         std::cout << "Product:       " << inputProduct << std::endl;
-
+        std::cout << std::fixed << std::setprecision(9);
         std::cout << "OPEN:          " << open << std::endl;
         std::cout << "CLOSE:         " << close << std::endl;
         std::cout << "HIGH:          " << high << std::endl;
@@ -283,13 +258,13 @@ std::vector<Candlestick> MerkelMain::generateCandlesticks()
 
     }
 
-    std::cout << "========================================== [ SUMMARY ] ==========================================" << std::endl;
-    std::cout << "Date                         Open          Close          High          Low" << std::endl;
-    std::cout << candlesticks[0].time << ":00:00          " << candlesticks[0].open << "          " << candlesticks[0].close << "          " << candlesticks[0].high << "          " << candlesticks[0].low << std::endl;
-    std::cout << candlesticks[1].time << ":00:00          " << candlesticks[1].open << "          " << candlesticks[1].close << "          " << candlesticks[1].high << "          " << candlesticks[1].low << std::endl;
-    std::cout << candlesticks[2].time << ":00:00          " << candlesticks[2].open << "          " << candlesticks[2].close << "          " << candlesticks[2].high << "          " << candlesticks[2].low << std::endl;
-    std::cout << candlesticks[3].time << ":00:00          " << candlesticks[3].open << "          " << candlesticks[3].close << "          " << candlesticks[3].high << "          " << candlesticks[3].low << std::endl;
-    std::cout << std::endl;
+    // std::cout << "========================================== [ SUMMARY ] ==========================================" << std::endl;
+    // std::cout << "Date                         Open          Close          High          Low" << std::endl;
+    // std::cout << candlesticks[0].time << ":00:00          " << candlesticks[0].open << "          " << candlesticks[0].close << "          " << candlesticks[0].high << "          " << candlesticks[0].low << std::endl;
+    // std::cout << candlesticks[1].time << ":00:00          " << candlesticks[1].open << "          " << candlesticks[1].close << "          " << candlesticks[1].high << "          " << candlesticks[1].low << std::endl;
+    // std::cout << candlesticks[2].time << ":00:00          " << candlesticks[2].open << "          " << candlesticks[2].close << "          " << candlesticks[2].high << "          " << candlesticks[2].low << std::endl;
+    // std::cout << candlesticks[3].time << ":00:00          " << candlesticks[3].open << "          " << candlesticks[3].close << "          " << candlesticks[3].high << "          " << candlesticks[3].low << std::endl;
+    // std::cout << std::endl;
 
     return candlesticks;
 

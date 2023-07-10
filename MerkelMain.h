@@ -17,7 +17,6 @@ class MerkelMain
     private: 
         // void printCandlestick(std::string product, std::string time);
         void printMenu();
-        void printMenu2();
         void printHelp();
         void printMarketStats();
         void enterAsk();

@@ -12,7 +12,6 @@ class Candlestick
 
         //draw candlestick
         static void drawCandlestick(std::vector<Candlestick> candlesticks);
-
     
         double high;
         double low;

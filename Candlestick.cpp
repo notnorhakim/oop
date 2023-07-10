@@ -12,7 +12,6 @@ Candlestick::Candlestick(double _high, double _low, double _close, double _open,
  
 }
 
-
 void Candlestick::drawCandlestick(std::vector<Candlestick> candlesticks)
 {
     double highest = 0;
@@ -55,10 +54,10 @@ void Candlestick::drawCandlestick(std::vector<Candlestick> candlesticks)
         }
         else
         {
-            high = candlestick.high;
-            low = candlestick.low;
-            close = candlestick.close;
-            open = candlestick.open;
+            high = candlestick.high * 100;
+            low = candlestick.low * 100;
+            close = candlestick.close * 100;
+            open = candlestick.open * 100;
         }
 
 
@@ -100,11 +99,11 @@ void Candlestick::drawCandlestick(std::vector<Candlestick> candlesticks)
         candle.push_back(open);
         candle.push_back(low);
 
-        std::cout << "============================================================= Candlestick #" << count << " =============================================================" << std::endl;
-        std::cout << "High: " << std::fixed << std::setprecision(0) << high << std::endl;
-        std::cout << "Close: " << std::fixed << std::setprecision(0) << close << std::endl;
-        std::cout << "Open: " << std::fixed << std::setprecision(0) << open << std::endl;
-        std::cout << "Low: " << std::fixed << std::setprecision(0) << low << std::endl;
+        // std::cout << "============================================================= Candlestick #" << count << " =============================================================" << std::endl;
+        // std::cout << "High: " << std::fixed << std::setprecision(0) << high << std::endl;
+        // std::cout << "Close: " << std::fixed << std::setprecision(0) << close << std::endl;
+        // std::cout << "Open: " << std::fixed << std::setprecision(0) << open << std::endl;
+        // std::cout << "Low: " << std::fixed << std::setprecision(0) << low << std::endl;
         
 
 
@@ -115,9 +114,8 @@ void Candlestick::drawCandlestick(std::vector<Candlestick> candlesticks)
     
     highest = highest * 100000000;
     lowest = lowest * 100000000;
-
     
-    int roundedNumber1 = static_cast<int>(std::round(highest));
+    long long roundedNumber1 = static_cast<long long>(std::floor(highest));
     std::string higheststr = std::to_string(roundedNumber1);
     int numberLength = higheststr.length();
 
@@ -128,82 +126,48 @@ void Candlestick::drawCandlestick(std::vector<Candlestick> candlesticks)
         numberLength--;
     }
 
-    
-
     highest = static_cast<int>(std::floor(highest));
     lowest = static_cast<int>(std::floor(lowest));
 
 
     yaxis = highest - lowest;
 
-    std::cout << "---------------------------------------------------------------------------------------------------------------------------" << std::endl;
+
+    
+    std::cout << "============================================================= Candlestick Chart =============================================================" << std::endl;
+    std::cout << std::fixed << std::setprecision(0);
     std::cout << "Highest: " << highest << std::endl;
     std::cout << "Lowest: " << lowest << std::endl;
     std::cout << "Yaxis: " << yaxis << std::endl;
     std::cout << std::endl;
 
     
+    //drawing a candlestick chart
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // for (int i = highest; i >= lowest; i--)
-    // {
-    //     for (int j = 0; j < candles.size(); j++)
-    //     {
-    //         if (candles[j][0] == i)
-    //         {
-    //             std::cout << "     |     ";
-    //         }
-    //         else if (candles[j][1] < i && i <= candles[j][0]){
-    //             std::cout << "     |     ";
-    //         }
-    //         else if (i == candles[j][1])
-    //         {
-    //             std::cout << "     =     ";
-    //         } 
-    //         else if (candles[j][2] < i && i <= candles[j][1])
-    //         {
-    //             std::cout << "     =     ";
-    //         }
-    //         else if (i == candles[j][2])
-    //         {
-    //             std::cout << "     |     ";
-    //         }
-    //         else if (candles[j][3] < i && i <= candles[j][2])
-    //         {
-    //             std::cout << "     |     ";
-
-    //         }
-
-
-
-
-    //         else
-    //         {
-    //             std::cout << "           ";
-    //         }
-
-
+    for (int i = highest; i >= lowest; i--)
+    {
+        for (int j = 0; j < candles.size(); j++)
+        {
+            if (i >= candles[j][1] && i <= candles[j][0])
+            {
+                std::cout << "     |     ";
+            }
+            else if( i >= candles[j][2] && i <= candles[j][1])
+            {
+                std::cout << "   =====   ";
+            }
+            else if (i >= candles[j][3] && i <= candles[j][2])
+            {
+                std::cout << "     |     ";
+            }
+            else
+            {
+                std::cout << "           ";
+            }
             
-    //     }
-    //     std::cout << std::endl;
-        
-    // }
+        }
+        std::cout << std::endl;
+    }
+
 
 }

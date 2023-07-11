@@ -11,7 +11,10 @@ class Candlestick
         Candlestick(double _high, double _low, double close, double _open, std::string _time);
 
         //draw candlestick
-        static void drawCandlestick(std::vector<Candlestick> candlesticks);
+        static void drawCandlestick(std::vector<Candlestick> candlesticks, std::string currentData);
+
+        //draw bargraph
+        static void drawBargraph(std::vector<Candlestick> candlesticks, std::string currentData);
     
         double high;
         double low;

@@ -14,6 +14,8 @@ class MerkelMain
         MerkelMain();
         /** Call this to start the sim */
         void init();
+        std::string currentData = "no data loaded";
+        
     private: 
         // void printCandlestick(std::string product, std::string time);
         void printMenu();
@@ -33,7 +35,6 @@ class MerkelMain
         std::vector<std::string> allTime;
 
         std::vector<Candlestick> candlesticks;
-
 
         OrderBook orderBook{"20200601.csv"};
 

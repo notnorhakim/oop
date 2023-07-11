@@ -12,16 +12,157 @@ Candlestick::Candlestick(double _high, double _low, double _close, double _open,
  
 }
 
-void Candlestick::drawCandlestick(std::vector<Candlestick> candlesticks)
+void Candlestick::drawBargraph(std::vector<Candlestick> candlesticks,std::string currentData)
+{
+    if (currentData == "no data loaded")
+    {
+        std::cout << std::endl;
+        std::cout << "***** No data loaded. Enter 1 to load a data first. *****" << std::endl;
+        return;
+    }
+
+    std::vector<double> bars;
+    double highest = 0;
+    double lowest = 10000000000;
+    double range = 0;
+    int divideCount = 0;
+    bool isDecimal = false;
+    int stringLength = 0;
+    std::string spacing;
+
+    for (Candlestick candlestick : candlesticks)
+    {
+        //close is the average price per unit in this time frame (same as Open, but for the current time frame)
+ 
+        double bar = candlestick.close;
+        int round = std::round(bar);
+        int lengthRound = std::to_string(round).length();
+
+        if (lengthRound == 1)
+        {
+            bar *= 1000000000;
+            isDecimal = true;
+        }
+        else
+        {
+            bar *= 100;
+        }
+
+        std::cout << std::fixed << std::setprecision(0);
+        int roundedNumber = static_cast<int>(std::round(bar));
+        std::string highstr = std::to_string(roundedNumber);
+        int numberLength = highstr.length();
+
+        while (numberLength > 4) 
+        {
+            bar /= 10;
+            numberLength--; 
+            divideCount++;
+        }
+        if (bar > highest)
+        {
+            highest = bar;
+        }
+        if (bar < lowest)
+        {
+            lowest = bar;
+        }
+
+        bars.push_back(bar);
+
+    }
+    range = highest - lowest;
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////draw bargraph///////////////////////////////////////////////////////////////////////////////////////////////
+    // std::cout << "Range: " << range << std::endl;
+    // std::cout << "Highest: " << highest << std::endl;
+    // std::cout << "Lowest: " << lowest << std::endl;
+    std::cout << std::endl;
+    std::cout << "~~~~~~~~~~ Average Price per hour for [ " <<  currentData << " ] ~~~~~~~~~~" << std::endl;
+    std::cout << std::endl;
+
+
+    for (int i = highest; i >= lowest - range; i-- )
+    {
+
+        std::cout << std::fixed << std::setprecision(5);
+        double steps = i;
+
+
+        
+        for (int j = 0; j < divideCount/candlesticks.size(); j++)
+        {
+            steps *= 10;
+        }
+        if (isDecimal)
+        {
+            steps /= 1000000000;
+        }
+        else
+        {
+            steps /= 100;
+        }
+        
+        if (divideCount == 8) // to make the thousands number have no decimals
+        {
+            std::cout << std::fixed << std::setprecision(0);
+            stringLength = (std::to_string(steps).length()) - 6; // to get the length of the number to insert the correct number of spaces so its aligned
+
+        }
+        else
+        {
+            std::cout << std::fixed << std::setprecision(8);
+            stringLength = std::to_string(steps).length() + 3; // to get the length of the number to insert the correct number of spaces so its aligned
+        }
+        std::cout << steps << " | ";
+        for (double bar : bars)
+        {
+            bar = std::round(bar);
+            if (i <= bar)
+            {
+                std::cout << "    xxxx    ";
+            }
+            else
+            {
+                std::cout <<  "            ";
+            }
+        }
+        std::cout << std::endl;
+    }
+    
+    std::cout << "_______________________________________________________________________________" << std::endl;
+    for (int i = 0; i < stringLength; i++)
+    {
+        spacing = spacing + " ";
+    }
+    std::cout << spacing << "|    11:00        12:00       13:00      14:00" << std::endl;
+}
+
+void Candlestick::drawCandlestick(std::vector<Candlestick> candlesticks,std::string currentData)
 {
     double highest = 0;
     double lowest = 10000000000;
+    double highestOri;
+    double lowestOri;
     double yaxis;
     double high;
     double low;
     double close;
     double open;
     int count = 1;
+
+    int divideCount = 0;
+    bool isDecimal = false;
+    int stringLength = 0;
+    std::string spacing;
+    
+    if (currentData == "no data loaded")
+    {
+        std::cout << std::endl;
+        std::cout << "***** No data loaded. Enter 1 to load a data first. *****" << std::endl;
+        return;
+    }
+   
 
     std::vector<std::vector<double>> candles;
 
@@ -51,6 +192,8 @@ void Candlestick::drawCandlestick(std::vector<Candlestick> candlesticks)
             low = candlestick.low * 100000000;
             close = candlestick.close * 100000000;
             open = candlestick.open * 100000000;
+            isDecimal = true;
+
         }
         else
         {
@@ -62,19 +205,6 @@ void Candlestick::drawCandlestick(std::vector<Candlestick> candlesticks)
 
 
         std::cout << std::fixed << std::setprecision(9);
-        // std::cout << beforeRound << std::endl;
-        // std::cout << lengthBeforeRound << std::endl;
-        // std::cout << "Round: " << round << std::endl;
-        // std::cout << "lengthRound: " << lengthRound << std::endl;
-
-
-        // std::cout << "Before" << std::endl;
-        // std::cout << "High: " <<  std::fixed << std::setprecision(0) << high << std::endl;
-        // std::cout << "Close: " << std::fixed << std::setprecision(0) << close << std::endl;
-        // std::cout << "Open: " << std::fixed << std::setprecision(0) << open << std::endl;
-        // std::cout << "Low: " << std::fixed << std::setprecision(0) << low << std::endl;
-        // std::cout << std::endl;
-
         int roundedNumber = static_cast<int>(std::round(high));
         std::string highstr = std::to_string(roundedNumber);
         int numberLength = highstr.length();
@@ -86,6 +216,8 @@ void Candlestick::drawCandlestick(std::vector<Candlestick> candlesticks)
             close /= 10;
             open /= 10;
             numberLength--; 
+            divideCount++;
+
         }
 
 
@@ -99,19 +231,11 @@ void Candlestick::drawCandlestick(std::vector<Candlestick> candlesticks)
         candle.push_back(open);
         candle.push_back(low);
 
-        // std::cout << "============================================================= Candlestick #" << count << " =============================================================" << std::endl;
-        // std::cout << "High: " << std::fixed << std::setprecision(0) << high << std::endl;
-        // std::cout << "Close: " << std::fixed << std::setprecision(0) << close << std::endl;
-        // std::cout << "Open: " << std::fixed << std::setprecision(0) << open << std::endl;
-        // std::cout << "Low: " << std::fixed << std::setprecision(0) << low << std::endl;
-        
-
-
-
         count++;
         candles.push_back(candle);
     }
-    
+    highestOri = highest;
+    lowestOri = lowest;
     highest = highest * 100000000;
     lowest = lowest * 100000000;
     
@@ -134,21 +258,52 @@ void Candlestick::drawCandlestick(std::vector<Candlestick> candlesticks)
 
 
     
-    std::cout << "============================================================= Candlestick Chart =============================================================" << std::endl;
-    std::cout << std::fixed << std::setprecision(0);
-    std::cout << "Highest: " << highest << std::endl;
-    std::cout << "Lowest: " << lowest << std::endl;
-    std::cout << "Yaxis: " << yaxis << std::endl;
+    std::cout << "======================================= [" << currentData << "] Candlestick Chart =======================================" << std::endl;
+    std::cout << std::fixed << std::setprecision(9);
+    // std::cout << "Highest: " << highestOri << std::endl;
+    // std::cout << "Lowest: " << lowestOri << std::endl;
     std::cout << std::endl;
-
     
     //drawing a candlestick chart
-
     for (int i = highest; i >= lowest; i--)
     {
+        std::cout << std::fixed << std::setprecision(5);
+        double steps = i;
+
+        for (int j = 0; j < divideCount/candlesticks.size(); j++)
+        {
+            steps *= 10;
+        }
+        if (isDecimal)
+        {
+            steps /= 100000000;
+        }
+        else
+        {
+            steps /= 100;
+        }
+        
+        std::cout << std::fixed << std::setprecision(8);
+        stringLength = std::to_string(steps).length() + 3; // to get the length of the number to insert the correct number of spaces so its aligned
+        std::cout << steps << " | ";
+        
         for (int j = 0; j < candles.size(); j++)
         {
-            if (i >= candles[j][1] && i <= candles[j][0])
+            // //round all candles
+            // candles[j][0] = std::round(candles[j][0]);
+            // candles[j][1] = std::round(candles[j][1]);
+            // candles[j][2] = std::round(candles[j][2]);
+            // candles[j][3] = std::round(candles[j][3]);
+
+            if (i <= candles[j][2] && i >= candles[j][1])
+            {
+                std::cout << "   =====   ";
+            }
+            else if (i == candles[j][1])
+            {
+                std::cout << "   =====   ";
+            }
+            else if (i >= candles[j][1] && i <= candles[j][0])
             {
                 std::cout << "     |     ";
             }
@@ -168,6 +323,12 @@ void Candlestick::drawCandlestick(std::vector<Candlestick> candlesticks)
         }
         std::cout << std::endl;
     }
+    std::cout << "_______________________________________________________" << std::endl;
+    for (int i = 0; i < stringLength; i++)
+    {
+        spacing = spacing + " ";
+    }
+    std::cout << spacing << "|    11:00      12:00      13:00      14:00" << std::endl;
 
 
 }

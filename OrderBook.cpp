@@ -81,10 +81,11 @@ std::string OrderBook::getEarliestTime()
 std::vector<std::string> OrderBook::getAllTimes()
 {
     std::vector<std::string> hour;
-    std::vector<std::string> hour_minute;
     for (OrderBookEntry& e : orders)
     {
         //if statement to check if the timestamp of only the hour is already in the vector
+        // if it is not found, it will return the end of the vector like hour.end()
+        //so if it is equal to hour.end() then it will push back the timestamp
         if (std::find(hour.begin(), hour.end(), e.timestamp.substr(0,13)) == hour.end())
         {
             hour.push_back(e.timestamp.substr(0,13));

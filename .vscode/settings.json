@@ -82,6 +82,7 @@
         "xtree": "cpp",
         "xutility": "cpp",
         "xlocmon": "cpp",
-        "xloctime": "cpp"
+        "xloctime": "cpp",
+        "random": "cpp"
     }
 }
